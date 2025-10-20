@@ -13,4 +13,19 @@ Gemini 2.5 Pro (or the latest powerful model available via Cursor)
 
 ---
 
+## Development Conventions
+
+This project adheres to the following conventions. All AI assistants must follow them.
+
+1.  **Conventional Commits**: All commit messages must follow the [Conventional Commits specification](https://www.conventionalcommits.org/). This is critical for automated versioning and changelog generation.
+    -   Use prefixes like `feat:`, `fix:`, `docs:`, `style:`, `refactor:`, `test:`, `build:`, `ci:`.
+    -   Use `!` after the type/scope for breaking changes (e.g., `feat(api)!:`).
+
+2.  **Semantic Versioning**: The project's version number, defined in `CHANGELOG.md`, follows [Semantic Versioning 2.0.0](https://semver.org/).
+    -   `fix:` commits correspond to `PATCH` version bumps.
+    -   `feat:` commits correspond to `MINOR` version bumps.
+    -   Commits with `BREAKING CHANGE` in the body or `!` in the header correspond to `MAJOR` version bumps.
+
+3.  **Keep a Changelog**: The `CHANGELOG.md` file must be kept in the format defined by [Keep a Changelog](https://keepachangelog.com/).
+
 This is the Single Source of Truth for any AI assistant working on the `cursor_configs` repository itself. The base template for this file's structure can be found in `templates/context.md.template`.

@@ -15,7 +15,7 @@ Template entry:
 
 ---
 
-2025-10-20 15:10 - AI Agent
+2025-10-20 - AI Agent
 - Summary: Initialized repo, added context workflow, created installer and init CLI.
 - Details:
   - Added `scripts/install.ps1` (idempotent install/update, profile + PATH shim).
@@ -26,7 +26,7 @@ Template entry:
 
 ---
 
-2025-10-20 16:00 - AI Agent
+2025-10-20 - AI Agent
 - Summary: Implemented full Linux/macOS compatibility for the `cinit` workflow.
 - Details:
   - Created parallel shell script implementations for all core logic (`install.sh`, `init_project.sh`). This was chosen over a single complex script for maintainability.
