@@ -52,3 +52,42 @@ Our installer now handles all of this complexity for you. You should not need to
 This is an advanced and thoughtful concept, often used in Infrastructure-as-Code (IaC). For our current needs, it's a bit too complex.
 
 Our script is designed to be minimally invasive. It only **appends** a new, unique directory to your PATH. It never deletes or overwrites existing paths. The "uninstall" process would simply be to remove that one specific entry from your PATH and delete the `~/.cursor_configs` directory, which is a very low-risk operation. Versioning the entire system PATH is therefore not necessary for this tool.
+
+### 8. Why does my PowerShell profile path point to OneDrive?
+*(왜 내 파워쉘은 onedrive 하위 폴더에 있는가?)*
+
+This is normal behavior on modern Windows systems (10/11). By default, Windows often syncs the `Documents` folder with OneDrive. Since PowerShell profiles are created within `Documents`, their path will naturally point to a location inside your OneDrive folder if syncing is active. Both system PowerShell and integrated terminals (like in Cursor/VS Code) will correctly reference this synced location.
+
+### 9. How are all the different PowerShells (System, VS Code, etc.) updated?
+*(시스템 파워쉘, 원드라이브 파워쉘, vs-code 파워쉘 다 cinit에 의해 자동으로 업데이트 되는가?)*
+
+The `cinit` command itself does not run the installer. The update mechanism works in two ways:
+1.  **Manual Update**: When you manually run `.\scripts\install.ps1`, the script updates the central repository (`~/.cursor_configs`) via `git pull`. This is for updating the installer logic itself.
+2.  **Automatic Update**: When you run `cinit`, the `init_project.ps1` script's first action is to run `git pull` from within the central repository. This ensures that every time you start a new project, you are using the latest version of the core logic, regardless of which PowerShell you run it from.
+
+---
+
+## Useful Diagnostic Commands
+
+Here are some commands you can run in different PowerShell terminals to understand and compare their environments.
+
+-   **Check the full PATH variable**:
+    ```powershell
+    $env:Path -split ';'
+    ```
+
+-   **See all profile file paths**:
+    ```powershell
+    $PROFILE | Format-List *
+    ```
+
+-   **Check PowerShell Version (un-truncated)**:
+    ```powershell
+    $PSVersionTable | Format-List
+    ```
+
+-   **Copy output to clipboard (to avoid truncation)**:
+    ```powershell
+    # Example:
+    $PSVersionTable | Out-Clipboard
+    ```
