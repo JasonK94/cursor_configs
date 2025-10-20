@@ -100,6 +100,7 @@ Write-Host "Successfully created or updated '$outputContextFile' for your new pr
 
 # 6. Create NEXT_STEPS.md
 $nextStepsFile = "NEXT_STEPS.md"
+Write-Host "[DEBUG] Attempting to create '$nextStepsFile'..."
 $nextStepsContent = @"
 # Next Steps: Your First Prompt for the AI Agent
 
@@ -114,7 +115,17 @@ Copy the following instructions and paste them into the Cursor chat to begin the
 
 ---
 "@
-Set-Content -Path $nextStepsFile -Value $nextStepsContent
+
+try {
+    Set-Content -Path $nextStepsFile -Value $nextStepsContent -ErrorAction Stop
+    Write-Host "[DEBUG] Set-Content for '$nextStepsFile' executed."
+} catch {
+    Write-Host "--- ERROR ---" -ForegroundColor Red
+    Write-Host "Failed to create '$nextStepsFile'. The error is:" -ForegroundColor Red
+    Write-Host $_.Exception.Message -ForegroundColor Yellow
+    Write-Host "--- END ERROR ---" -ForegroundColor Red
+}
+
 
 # Add a verification step to ensure the file was created
 if (-not (Test-Path $nextStepsFile)) {
