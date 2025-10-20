@@ -56,3 +56,12 @@ This file provides general guidelines for an AI assistant working on a coding pr
   2. Make local commits frequently; push only major/stable changes or when collaboration requires it.
   3. Summarize major changes in `CHANGELOG.md` using Keep a Changelog style.
   4. Reference the relevant DEVLOG entry in commit messages when helpful.
+
+## Project Artifacts
+
+A new project initialized via `cinit` contains several key files. Understand their roles:
+
+1.  **`context.md`**: The **Single Source of Truth** for the AI agent. This is your primary tool for guiding the AI. It defines the project's goal, scope, and technical constraints. It should be updated continuously as the project evolves.
+2.  **`NEXT_STEPS.md`**: A **bootstrapping guide**. It contains the ideal first prompt to give the AI agent to kickstart the development process in a structured way. Its purpose is fulfilled after this first prompt.
+3.  **`DEVLOG.md`**: The **project's narrative log**. Use it to record the "why" behind decisions, track experiments, and maintain context between development sessions. This is for both you and the AI to review.
+4.  **`CHANGELOG.md`**: The **formal record of changes**. Use it to document notable updates, bug fixes, and new features, typically adhering to Semantic Versioning.
