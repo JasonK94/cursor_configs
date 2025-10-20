@@ -152,7 +152,20 @@ Copy the following instructions and paste them into the Cursor chat to begin the
 ---
 EOF
 
-# 6. Post-Initialization Guidance
+# 6. Copy Log Templates
+DEVLOG_TEMPLATE_PATH="$CENTRAL_REPO_PATH/templates/DEVLOG.md.template"
+CHANGELOG_TEMPLATE_PATH="$CENTRAL_REPO_PATH/templates/CHANGELOG.md.template"
+DEVLOG_DEST_PATH="$PROJECT_ROOT/DEVLOG.md"
+CHANGELOG_DEST_PATH="$PROJECT_ROOT/CHANGELOG.md"
+
+if [ -f "$DEVLOG_TEMPLATE_PATH" ] && [ ! -f "$DEVLOG_DEST_PATH" ]; then
+    cp "$DEVLOG_TEMPLATE_PATH" "$DEVLOG_DEST_PATH"
+fi
+if [ -f "$CHANGELOG_TEMPLATE_PATH" ] && [ ! -f "$CHANGELOG_DEST_PATH" ]; then
+    cp "$CHANGELOG_TEMPLATE_PATH" "$CHANGELOG_DEST_PATH"
+fi
+
+# 7. Post-Initialization Guidance
 GUIDANCE=$(cat <<EOF
 
 ----------------------------------------------------

@@ -70,7 +70,7 @@ Once the one-time setup is complete, you can initialize any new project with a s
     ```sh
     cinit
     ```
-4.  Follow the interactive prompts. The script will automatically create `context.md` and `NEXT_STEPS.md` for you, and you can begin your project.
+4.  Follow the interactive prompts. The script will automatically create `context.md`, `NEXT_STEPS.md`, `DEVLOG.md`, and `CHANGELOG.md` for you, and you can begin your project.
 
 ### Recommended Workflow After `cinit`
 

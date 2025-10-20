@@ -133,7 +133,21 @@ if (-not (Test-Path $nextStepsFile)) {
     Write-Host "Error: Failed to create '$nextStepsFile'. Please check permissions." -ForegroundColor Red
 }
 
-# 7. Post-Initialization Guidance
+# 7. Copy Log Templates
+$devlogTemplatePath = Join-Path $centralRepoPath "templates/DEVLOG.md.template"
+$changelogTemplatePath = Join-Path $centralRepoPath "templates/CHANGELOG.md.template"
+$devlogDestPath = Join-Path $ProjectRoot "DEVLOG.md"
+$changelogDestPath = Join-Path $ProjectRoot "CHANGELOG.md"
+
+if ((Test-Path $devlogTemplatePath) -and -not (Test-Path $devlogDestPath)) {
+    Copy-Item -Path $devlogTemplatePath -Destination $devlogDestPath
+}
+if ((Test-Path $changelogTemplatePath) -and -not (Test-Path $changelogDestPath)) {
+    Copy-Item -Path $changelogTemplatePath -Destination $changelogDestPath
+}
+
+
+# 8. Post-Initialization Guidance
 $guidance = @"
 
 ----------------------------------------------------
