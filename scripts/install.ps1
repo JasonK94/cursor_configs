@@ -121,7 +121,7 @@ if (-not (Test-Path $shimDir)) {
 
 $shimCmd = @'
 @echo off
-powershell -NoProfile -ExecutionPolicy Bypass -File "%USERPROFILE%\.cursor_configs\scripts\init_project.ps1" %*
+powershell -NoProfile -ExecutionPolicy Bypass -File "%USERPROFILE%\.cursor_configs\scripts\init_project.ps1" -WorkingDirectory "%CD%" %*
 exit /b %ERRORLEVEL%
 '@
 Set-Content -Path $shimCmdPath -Value $shimCmd -Encoding ASCII

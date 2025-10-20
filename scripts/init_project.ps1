@@ -1,3 +1,12 @@
+param(
+    [string]$WorkingDirectory
+)
+
+# Set the working directory to where cinit was called from
+if (-not [string]::IsNullOrWhiteSpace($WorkingDirectory) -and (Test-Path $WorkingDirectory)) {
+    Set-Location -Path $WorkingDirectory
+}
+
 # init_project.ps1 - Interactively initializes a new project with cursor context.
 
 # 1. Self-Update: Pull the latest changes from the central repository
@@ -100,12 +109,6 @@ Write-Host "Successfully created or updated '$outputContextFile' for your new pr
 
 # 6. Create NEXT_STEPS.md
 $nextStepsFile = "NEXT_STEPS.md"
-$currentPath = (Get-Location).Path
-$fullPath = Join-Path $currentPath $nextStepsFile
-
-Write-Host "[DEBUG] Current working directory: $currentPath"
-Write-Host "[DEBUG] Attempting to create file at full path: $fullPath"
-
 $nextStepsContent = @"
 # Next Steps: Your First Prompt for the AI Agent
 
@@ -121,15 +124,7 @@ Copy the following instructions and paste them into the Cursor chat to begin the
 ---
 "@
 
-try {
-    Set-Content -Path $fullPath -Value $nextStepsContent -Force -ErrorAction Stop
-    Write-Host "[DEBUG] Set-Content for '$nextStepsFile' executed without throwing an error."
-} catch {
-    Write-Host "--- ERROR ---" -ForegroundColor Red
-    Write-Host "Failed to create '$nextStepsFile'. The error is:" -ForegroundColor Red
-    Write-Host $_.Exception.ToString() -ForegroundColor Yellow
-    Write-Host "--- END ERROR ---" -ForegroundColor Red
-}
+Set-Content -Path $nextStepsFile -Value $nextStepsContent -Force
 
 # Add a verification step to ensure the file was created
 if (-not (Test-Path $nextStepsFile)) {
