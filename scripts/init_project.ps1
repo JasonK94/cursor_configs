@@ -97,15 +97,32 @@ Set-Content -Path $outputContextFile -Value $finalContent
 
 Write-Host "Successfully created or updated '$outputContextFile' for your new project." -ForegroundColor Green
 
-# 6. Post-Initialization Guidance
+# 6. Create NEXT_STEPS.md
+$nextStepsFile = "NEXT_STEPS.md"
+$nextStepsContent = @"
+# Next Steps: Your First Prompt for the AI Agent
+
+Copy the following instructions and paste them into the Cursor chat to begin the development process.
+
+---
+
+1.  **Analyze Context**: Read the `context.md` file thoroughly to understand the project's Primary Goal, the designated AI Model, and any provided References.
+2.  **Deconstruct the Goal**: Based on your analysis, break down the Primary Goal into a logical sequence of smaller, actionable sub-goals.
+3.  **Propose a Plan**: Present a detailed, step-by-step TODO list that outlines the implementation plan for the *first* sub-goal. For each step, specify which files you intend to create or modify.
+4.  **Confirm Before Acting**: After presenting the plan, ask for my confirmation before you begin writing any code or modifying any files.
+
+---
+"@
+Set-Content -Path $nextStepsFile -Value $nextStepsContent
+
+# 7. Post-Initialization Guidance
 $guidance = @"
 
 ----------------------------------------------------
 Next Steps:
-1. Open the newly created `context.md` file.
-2. Review the content and add any more specific details to the 'Primary Goal' or 'References' sections.
-3. Start your session with the AI assistant by giving it a high-level instruction, for example:
-   "Read the context.md file, understand the goal, and propose a step-by-step plan to achieve it."
+1.  **Open `NEXT_STEPS.md`**.
+2.  **Copy the instructions** from the file.
+3.  **Paste them into the Cursor chat** to start the development workflow.
 ----------------------------------------------------
 
 "@
