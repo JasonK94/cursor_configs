@@ -32,17 +32,17 @@ $goalPrompt = "What is the primary goal of this project?"
 if (-not [string]::IsNullOrWhiteSpace($existingGoal)) {
     $goalPrompt += " (Press Enter to keep: '$existingGoal')"
 }
-$userInputGoal = Read-Host -Prompt $goalPrompt
+$userInputGoal = Read-Host -Prompt $goalPrompt -AllowEmpty
 $projectGoal = if ([string]::IsNullOrWhiteSpace($userInputGoal)) { $existingGoal } else { $userInputGoal }
 
 $modelPrompt = "Which AI model do you plan to use?"
 if (-not [string]::IsNullOrWhiteSpace($existingModel)) {
     $modelPrompt += " (Press Enter to keep: '$existingModel')"
 }
-$userInputModel = Read-Host -Prompt $modelPrompt
+$userInputModel = Read-Host -Prompt $modelPrompt -AllowEmpty
 $aiModel = if ([string]::IsNullOrWhiteSpace($userInputModel)) { $existingModel } else { $userInputModel }
 
-$references = Read-Host -Prompt "[Optional] Any new reference URLs or documents to add? (comma-separated)"
+$references = Read-Host -Prompt "[Optional] Any new reference URLs or documents to add? (comma-separated)" -AllowEmpty
 
 if ([string]::IsNullOrWhiteSpace($projectGoal) -or [string]::IsNullOrWhiteSpace($aiModel)) {
     Write-Host "Project goal and AI model cannot be empty. Aborting." -ForegroundColor Red
