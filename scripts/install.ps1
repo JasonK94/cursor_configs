@@ -52,11 +52,6 @@ function $commandName {
 }
 "@
 
-$aliasCommand = @"
-# Sets a short alias for Start-CursorProject
-Set-Alias -Name $aliasName -Value $commandName
-"@
-
 $profileContent = Get-Content $profilePath -Raw
 $changesMade = $false
 
@@ -68,16 +63,44 @@ if ($profileContent -notlike "*function $commandName*") {
     Write-Host "'$commandName' command is already present in your PowerShell profile."
 }
 
-if ($profileContent -notlike "*Set-Alias -Name $aliasName*") {
-    Write-Host "Adding alias '$aliasName' to your PowerShell profile..."
+# Interactively set the alias to avoid conflicts
+$defaultAlias = "cinit"
+$finalAlias = ""
+
+if (-not (Get-Command $defaultAlias -ErrorAction SilentlyContinue)) {
+    # Default alias is available
+    $finalAlias = $defaultAlias
+} else {
+    # Alias is taken, prompt user for a new one
+    Write-Host "'$defaultAlias' is already in use on your system." -ForegroundColor Yellow
+    while ($true) {
+        $userAlias = Read-Host -Prompt "Please enter a custom alias for Start-CursorProject (e.g., cinit, icp, startcp)"
+        if ([string]::IsNullOrWhiteSpace($userAlias)) {
+            Write-Host "Alias cannot be empty." -ForegroundColor Red
+        } elseif (Get-Command $userAlias -ErrorAction SilentlyContinue) {
+            Write-Host "Alias '$userAlias' is also already in use. Please choose another." -ForegroundColor Red
+        } else {
+            $finalAlias = $userAlias
+            break
+        }
+    }
+}
+
+$aliasCommand = @"
+# Sets a short alias for Start-CursorProject
+Set-Alias -Name $finalAlias -Value $commandName
+"@
+
+if ($profileContent -notlike "*Set-Alias -Name $finalAlias*") {
+    Write-Host "Adding alias '$finalAlias' to your PowerShell profile..."
     Add-Content -Path $profilePath -Value $aliasCommand
     $changesMade = $true
 } else {
-    Write-Host "Alias '$aliasName' is already present in your PowerShell profile."
+    Write-Host "Alias '$finalAlias' is already present in your PowerShell profile."
 }
 
 if ($changesMade) {
-    Write-Host "'$commandName' (alias '$aliasName') has been configured. Please restart your terminal or run '. `"$profilePath`"' to use it." -ForegroundColor Green
+    Write-Host "'$commandName' (alias '$finalAlias') has been configured. Please restart your terminal or run '. `"$profilePath`"' to use it." -ForegroundColor Green
 }
 
 Write-Host "Setup finished!" -ForegroundColor Cyan
