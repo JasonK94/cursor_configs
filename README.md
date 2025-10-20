@@ -50,3 +50,23 @@ Once the one-time setup is complete, you can initialize any new project with a s
     Start-CursorProject
     ```
 4.  Follow the interactive prompts to define your project's goal and the AI model you'll be using. The script will automatically create a `context.md` file for you, and you can begin your project.
+
+### Recommended Workflow After `cinit`
+
+After `cinit` successfully creates your `context.md`, follow these steps:
+
+1.  **Enrich the Context**: Open the new `context.md`. Add more specific details, requirements, or constraints to the "Primary Goal" section. If you have them, add more links or file paths to the "References" section. A rich context leads to better results.
+2.  **Start the Conversation**: Begin your session with the AI assistant. A good starting prompt is:
+    > "Read the `context.md` file, understand the goal, and propose a step-by-step plan to achieve it."
+3.  **Iterate**: Use the AI to execute the plan, one step at a time. Update `context.md` as the project evolves to reflect new decisions or changes in scope.
+
+## Further Reading
+
+-   **[Documentation Structure](./docs/project_structure.md)**: Understand the difference between the "model" documents in this repository and the "project" documents you'll be creating.
+-   **[PowerShell Caveats & FAQ](./docs/powershell_caveats.md)**: Answers to common questions about the PowerShell environment and why the installer is designed the way it is.
+
+## Development History
+
+- Use `DEVLOG.md` to capture narrative context across sessions.
+- Use `CHANGELOG.md` to record notable, versioned changes.
+- Prefer local commits during active development; push only major/stable updates or when sharing is needed.

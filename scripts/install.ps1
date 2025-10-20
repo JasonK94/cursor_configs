@@ -77,7 +77,11 @@ Set-Alias -Name {ALIAS} -Value $commandName
 $profilesToUpdate = @(
     $PROFILE.CurrentUserAllHosts,
     (Join-Path $HOME "Documents\\WindowsPowerShell\\Profile.ps1"),
-    (Join-Path $HOME "Documents\\PowerShell\\Profile.ps1")
+    (Join-Path $HOME "Documents\\PowerShell\\Profile.ps1"),
+    (Join-Path $HOME "Documents\\WindowsPowerShell\\Microsoft.VSCode_profile.ps1"),
+    (Join-Path $HOME "Documents\\PowerShell\\Microsoft.VSCode_profile.ps1"),
+    (Join-Path $HOME "Documents\\WindowsPowerShell\\Microsoft.PowerShell_profile.ps1"),
+    (Join-Path $HOME "Documents\\PowerShell\\Microsoft.PowerShell_profile.ps1")
 ) | Where-Object { $_ -and $_.Trim() -ne "" } | Select-Object -Unique
 
 $changesMade = $false

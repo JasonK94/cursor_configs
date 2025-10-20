@@ -45,3 +45,14 @@ This file provides general guidelines for an AI assistant working on a coding pr
 1.  **Clarity and Conciseness**: Be clear and to the point. Avoid jargon where possible.
 2.  **Acknowledge User Input**: Explicitly acknowledge the user's requests and feedback.
 3.  **Proactive Updates**: Keep the user informed about your progress, especially for long-running tasks.
+
+## Development History & Push Policy
+
+- Maintain two documents at repo root:
+  - `DEVLOG.md`: narrative context of sessions, decisions, and next steps.
+  - `CHANGELOG.md`: semantic, versioned record of notable changes.
+- Workflow:
+  1. Record intent and context in `DEVLOG.md` before significant work.
+  2. Make local commits frequently; push only major/stable changes or when collaboration requires it.
+  3. Summarize major changes in `CHANGELOG.md` using Keep a Changelog style.
+  4. Reference the relevant DEVLOG entry in commit messages when helpful.
