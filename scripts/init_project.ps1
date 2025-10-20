@@ -26,20 +26,20 @@ if (Test-Path $outputContextFile) {
 }
 
 
-# 3. Get User Input (only if values are missing)
-$projectGoal = $existingGoal
-if ([string]::IsNullOrWhiteSpace($projectGoal)) {
-    $projectGoal = Read-Host -Prompt "What is the primary goal of this project?"
-} else {
-    Write-Host "Using existing Primary Goal: $projectGoal"
+# 3. Get User Input
+$goalPrompt = "What is the primary goal of this project?"
+if (-not [string]::IsNullOrWhiteSpace($existingGoal)) {
+    $goalPrompt += " (Press Enter to keep: '$existingGoal')"
 }
+$userInputGoal = Read-Host -Prompt $goalPrompt
+$projectGoal = if ([string]::IsNullOrWhiteSpace($userInputGoal)) { $existingGoal } else { $userInputGoal }
 
-$aiModel = $existingModel
-if ([string]::IsNullOrWhiteSpace($aiModel)) {
-    $aiModel = Read-Host -Prompt "Which AI model do you plan to use?"
-} else {
-    Write-Host "Using existing AI Model: $aiModel"
+$modelPrompt = "Which AI model do you plan to use?"
+if (-not [string]::IsNullOrWhiteSpace($existingModel)) {
+    $modelPrompt += " (Press Enter to keep: '$existingModel')"
 }
+$userInputModel = Read-Host -Prompt $modelPrompt
+$aiModel = if ([string]::IsNullOrWhiteSpace($userInputModel)) { $existingModel } else { $userInputModel }
 
 $references = Read-Host -Prompt "[Optional] Any new reference URLs or documents to add? (comma-separated)"
 
