@@ -32,17 +32,17 @@ $goalPrompt = "What is the primary goal of this project?"
 if (-not [string]::IsNullOrWhiteSpace($existingGoal)) {
     $goalPrompt += " (Press Enter to keep: '$existingGoal')"
 }
-$userInputGoal = Read-Host -Prompt $goalPrompt -AllowEmpty
+$userInputGoal = Read-Host -Prompt $goalPrompt
 $projectGoal = if ([string]::IsNullOrWhiteSpace($userInputGoal)) { $existingGoal } else { $userInputGoal }
 
 $modelPrompt = "Which AI model do you plan to use?"
 if (-not [string]::IsNullOrWhiteSpace($existingModel)) {
     $modelPrompt += " (Press Enter to keep: '$existingModel')"
 }
-$userInputModel = Read-Host -Prompt $modelPrompt -AllowEmpty
+$userInputModel = Read-Host -Prompt $modelPrompt
 $aiModel = if ([string]::IsNullOrWhiteSpace($userInputModel)) { $existingModel } else { $userInputModel }
 
-$references = Read-Host -Prompt "[Optional] Any new reference URLs or documents to add? (comma-separated)" -AllowEmpty
+$references = Read-Host -Prompt "[Optional] Any new reference URLs or documents to add? (comma-separated)"
 
 if ([string]::IsNullOrWhiteSpace($projectGoal) -or [string]::IsNullOrWhiteSpace($aiModel)) {
     Write-Host "Project goal and AI model cannot be empty. Aborting." -ForegroundColor Red
@@ -100,7 +100,6 @@ Write-Host "Successfully created or updated '$outputContextFile' for your new pr
 
 # 6. Create NEXT_STEPS.md
 $nextStepsFile = "NEXT_STEPS.md"
-Write-Host "[DEBUG] Attempting to create '$nextStepsFile'..."
 $nextStepsContent = @"
 # Next Steps: Your First Prompt for the AI Agent
 
@@ -116,16 +115,7 @@ Copy the following instructions and paste them into the Cursor chat to begin the
 ---
 "@
 
-try {
-    Set-Content -Path $nextStepsFile -Value $nextStepsContent -ErrorAction Stop
-    Write-Host "[DEBUG] Set-Content for '$nextStepsFile' executed."
-} catch {
-    Write-Host "--- ERROR ---" -ForegroundColor Red
-    Write-Host "Failed to create '$nextStepsFile'. The error is:" -ForegroundColor Red
-    Write-Host $_.Exception.Message -ForegroundColor Yellow
-    Write-Host "--- END ERROR ---" -ForegroundColor Red
-}
-
+Set-Content -Path $nextStepsFile -Value $nextStepsContent
 
 # Add a verification step to ensure the file was created
 if (-not (Test-Path $nextStepsFile)) {
