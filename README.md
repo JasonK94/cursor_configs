@@ -13,7 +13,9 @@ This project is "meta" in that it defines the process for how we define processe
 
 ## Getting Started
 
-### One-Time Setup
+This tool supports both Windows and Linux/macOS. Please follow the instructions for your operating system.
+
+### For Windows (PowerShell)
 
 To start using this framework, you need to install the initialization tool. This only needs to be done once per machine.
 
@@ -26,30 +28,49 @@ To start using this framework, you need to install the initialization tool. This
     Open a PowerShell terminal, navigate into the cloned directory, and run the installer.
     ```powershell
     cd cursor_configs
+    # You may need to set the execution policy for the current session first
+    # Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
     ./scripts/install.ps1
     ```
-    This script will copy the repository to a central location on your machine and add a `Start-CursorProject` command to your PowerShell profile.
+    This script will set up the `cinit` command for you.
 
-3.  **Restart your terminal** or run `. $PROFILE` to make the new command available.
+3.  **Restart your terminal** to ensure all changes (like PATH updates) are applied.
 
-### Usage for New Projects
+### For Linux & macOS (Bash/Zsh)
+
+1.  **Clone this repository**:
+    ```bash
+    git clone https://github.com/JasonK94/cursor_configs.git
+    ```
+
+2.  **Run the installation script**:
+    Navigate into the cloned directory and run the installer.
+    ```bash
+    cd cursor_configs
+    sh ./scripts/install.sh
+    ```
+    This script will create the `cinit` command in `~/.local/bin` and add it to your shell profile (`.bashrc` or `.zshrc`).
+
+3.  **Restart your terminal** or run `source ~/.bashrc` (or `~/.zshrc`) to apply the changes.
+
+### Usage for New Projects (All Operating Systems)
 
 Once the one-time setup is complete, you can initialize any new project with a single command.
 
 1.  Create a new directory for your project and navigate into it.
-    ```powershell
+    ```sh
     mkdir my-new-project
     cd my-new-project
     ```
 2.  Initialize a git repository.
-    ```powershell
+    ```sh
     git init
     ```
 3.  Run the initialization command:
-    ```powershell
-    Start-CursorProject
+    ```sh
+    cinit
     ```
-4.  Follow the interactive prompts to define your project's goal and the AI model you'll be using. The script will automatically create a `context.md` file for you, and you can begin your project.
+4.  Follow the interactive prompts. The script will automatically create `context.md` and `NEXT_STEPS.md` for you, and you can begin your project.
 
 ### Recommended Workflow After `cinit`
 
