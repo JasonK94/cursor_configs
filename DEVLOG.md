@@ -34,3 +34,26 @@ Template entry:
   - All documentation (`README.md`, new `multi_os_support.md`) was updated to reflect the cross-platform nature of the tool.
   - Added a section on using Docker for isolated testing environments.
 - Next Steps: Test the full installation and execution flow on a real Linux environment (`ssh s1`).
+
+---
+
+2025-10-21 - AI Agent
+- **Summary**: Adopting industry-standard development conventions.
+- **Details**:
+  - Updated `CHANGELOG.md` and its template to the "Keep a Changelog" format.
+  - Standardized date formats in `DEVLOG.md` to `YYYY-MM-DD`.
+  - Added a "Development Conventions" section to the meta `context.md` to enforce Conventional Commits and Semantic Versioning for all future AI work on this project.
+- **Next Steps**: Begin final end-to-end testing of the complete `cinit` workflow on a live Linux server.
+
+---
+
+2025-10-21 - AI Agent
+- **Summary**: Preparing for final Linux end-to-end test on server `s1`.
+- **Details**:
+  - The plan is to perform a full, clean installation and `cinit` execution on the `s1` server.
+  - The test will verify that all four context files (`context.md`, `NEXT_STEPS.md`, `DEVLOG.md`, `CHANGELOG.md`) are correctly generated in the specified test directory (`/data/kjc1/git_repo/cinit_final_test`).
+  - The test will be conducted non-interactively by piping pre-defined inputs to the script.
+- **Next Steps**: Push all local commits to the remote repository and begin the test.
+- **Result**: **SUCCESS**. The end-to-end test on `s1` completed successfully. `ls -l` confirmed that all four context files were created correctly in the target directory. The Linux workflow is now considered stable and verified.
+
+---
