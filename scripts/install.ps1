@@ -9,6 +9,8 @@ param(
 $centralRepoPath = "$HOME\\.cursor_configs"
 $repoUrl = "https://github.com/JasonK94/cursor_configs.git"
 $initScriptPath = Join-Path $centralRepoPath "scripts\\init_project.ps1"
+$shimDir = Join-Path $centralRepoPath "bin"
+$shimCmdPath = Join-Path $shimDir "cinit.cmd"
 
 # 2. Install or Update the Core Repository
 if (Test-Path $centralRepoPath) {
@@ -108,10 +110,34 @@ foreach ($profilePath in $profilesToUpdate) {
     }
 }
 
+# 6. Create a PATH-based shim so 'cinit' works without profiles
+if (-not (Test-Path $shimDir)) {
+    New-Item -Path $shimDir -ItemType Directory -Force | Out-Null
+}
+
+$shimCmd = "@echo off`r`n" + "powershell -NoProfile -ExecutionPolicy Bypass -File \"%USERPROFILE%\\.cursor_configs\\scripts\\init_project.ps1\"`r`n" + "exit /b %ERRORLEVEL%`r`n"
+Set-Content -Path $shimCmdPath -Value $shimCmd -Encoding ASCII
+
+# Ensure shimDir is on PATH (User) and current session
+try {
+    $userPath = [Environment]::GetEnvironmentVariable("Path", "User")
+    if (-not $userPath) { $userPath = "" }
+    if ($userPath -notlike "*${shimDir}*") {
+        [Environment]::SetEnvironmentVariable("Path", ($userPath.TrimEnd(';') + ";" + $shimDir), "User")
+    }
+    # Update current session PATH if possible
+    if ($env:Path -notlike "*${shimDir}*") {
+        $env:Path = $env:Path.TrimEnd(';') + ";" + $shimDir
+    }
+} catch {
+    Write-Host "Warning: Failed to update PATH. You may need to add '$shimDir' to PATH manually." -ForegroundColor Yellow
+}
+
 if ($changesMade) {
     Write-Host "'$commandName' (alias '$finalAlias') has been configured. Restart your terminal or run '. `"$($PROFILE.CurrentUserAllHosts)`"' to use it." -ForegroundColor Green
 } else {
-    Write-Host "No changes were necessary. '$commandName' and alias '$finalAlias' are already configured." -ForegroundColor Green
+    Write-Host "No profile changes were necessary. '$commandName' and alias '$finalAlias' may already be configured." -ForegroundColor Green
 }
 
+Write-Host "Shim installed at '$shimCmdPath'. If PATH updated, 'cinit' should work immediately in new shells; it may also work in this session." -ForegroundColor Cyan
 Write-Host "Setup finished!" -ForegroundColor Cyan
