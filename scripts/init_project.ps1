@@ -1,9 +1,9 @@
 param(
-    [string]$WorkingDirectory
+    [string]$ProjectRoot
 )
 
 # CRITICAL: Abort if the calling directory was not passed correctly.
-if ([string]::IsNullOrWhiteSpace($WorkingDirectory) -or -not (Test-Path $WorkingDirectory)) {
+if ([string]::IsNullOrWhiteSpace($ProjectRoot) -or -not (Test-Path $ProjectRoot)) {
     Write-Host "FATAL: Script was called without a valid working directory. Please ensure you are using the latest version by running install.ps1" -ForegroundColor Red
     exit 1
 }
@@ -27,7 +27,7 @@ try {
 $existingGoal = ""
 $existingModel = ""
 # Use ABSOLUTE paths for all file operations
-$outputContextFile = Join-Path $WorkingDirectory "context.md"
+$outputContextFile = Join-Path $ProjectRoot "context.md"
 
 if (Test-Path $outputContextFile) {
     Write-Host "Existing 'context.md' found. Reading current values..." -ForegroundColor Cyan
@@ -110,7 +110,7 @@ Set-Content -Path $outputContextFile -Value $finalContent
 Write-Host "Successfully created or updated '$outputContextFile' for your new project." -ForegroundColor Green
 
 # 6. Create NEXT_STEPS.md
-$nextStepsFile = Join-Path $WorkingDirectory "NEXT_STEPS.md"
+$nextStepsFile = Join-Path $ProjectRoot "NEXT_STEPS.md"
 $nextStepsContent = @"
 # Next Steps: Your First Prompt for the AI Agent
 
