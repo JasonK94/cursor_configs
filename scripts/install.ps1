@@ -141,6 +141,14 @@ try {
     Write-Host "Warning: Failed to update PATH. You may need to add '$shimDir' to PATH manually." -ForegroundColor Yellow
 }
 
+# Temporarily update PATH for the current session so 'cinit' can be used immediately.
+if ($env:Path -notlike "*${shimDir}*") {
+    $env:Path += ";$shimDir"
+    if (-not $Quiet) {
+        Write-Host "Temporarily updated PATH for the current session. 'cinit' is now available." -ForegroundColor Cyan
+    }
+}
+
 if ($changesMade) {
     Write-Host "'$commandName' (alias '$finalAlias') has been configured. Restart your terminal or run '. `"$($PROFILE.CurrentUserAllHosts)`"' to use it." -ForegroundColor Green
 } else {
