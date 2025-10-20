@@ -30,13 +30,19 @@ if (Test-Path $centralRepoPath) {
 }
 
 # 3. Add Command to PowerShell Profile
-$profilePath = $PROFILE.CurrentUserCurrentHost
+# Use CurrentUserAllHosts to make the command available in all PowerShell terminals (VS Code, Windows Terminal, etc.)
+$profilePath = $PROFILE.CurrentUserAllHosts
+$profileDir = Split-Path $profilePath -Parent
+if (-not (Test-Path $profileDir)) {
+    New-Item -Path $profileDir -ItemType Directory -Force | Out-Null
+}
 if (-not (Test-Path $profilePath)) {
     Write-Host "Creating PowerShell profile at $profilePath..."
     New-Item -Path $profilePath -ItemType File -Force | Out-Null
 }
 
 $commandName = "Start-CursorProject"
+$aliasName = "SCP"
 $command = @"
 
 # Adds the Start-CursorProject command for initializing a new project
@@ -46,13 +52,32 @@ function $commandName {
 }
 "@
 
+$aliasCommand = @"
+# Sets a short alias for Start-CursorProject
+Set-Alias -Name $aliasName -Value $commandName
+"@
+
 $profileContent = Get-Content $profilePath -Raw
-if ($profileContent -notlike "*$commandName*") {
+$changesMade = $false
+
+if ($profileContent -notlike "*function $commandName*") {
     Write-Host "Adding '$commandName' command to your PowerShell profile..."
     Add-Content -Path $profilePath -Value $command
-    Write-Host "'$commandName' has been added. Please restart your terminal or run '. $profilePath' to use it." -ForegroundColor Green
+    $changesMade = $true
 } else {
     Write-Host "'$commandName' command is already present in your PowerShell profile."
+}
+
+if ($profileContent -notlike "*Set-Alias -Name $aliasName*") {
+    Write-Host "Adding alias '$aliasName' to your PowerShell profile..."
+    Add-Content -Path $profilePath -Value $aliasCommand
+    $changesMade = $true
+} else {
+    Write-Host "Alias '$aliasName' is already present in your PowerShell profile."
+}
+
+if ($changesMade) {
+    Write-Host "'$commandName' (alias '$aliasName') has been configured. Please restart your terminal or run '. `"$profilePath`"' to use it." -ForegroundColor Green
 }
 
 Write-Host "Setup finished!" -ForegroundColor Cyan
