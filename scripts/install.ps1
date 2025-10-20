@@ -42,7 +42,7 @@ if (-not (Test-Path $profilePath)) {
 }
 
 $commandName = "Start-CursorProject"
-$aliasName = "SCP"
+$aliasName = "cinit" # Changed from SCP to avoid conflict with Secure Copy Protocol
 $command = @"
 
 # Adds the Start-CursorProject command for initializing a new project
