@@ -13,35 +13,68 @@ try {
     Set-Location $PSScriptRoot
 }
 
-# 2. Get User Input
-$projectGoal = Read-Host -Prompt "What is the primary goal of this project?"
-$aiModel = Read-Host -Prompt "Which AI model do you plan to use? (e.g., GPT-4o, Claude 3 Opus)"
-$references = Read-Host -Prompt "[Optional] Any reference URLs or documents? (comma-separated)"
+# 2. Check for existing context and extract values
+$existingGoal = ""
+$existingModel = ""
+$outputContextFile = "context.md"
+
+if (Test-Path $outputContextFile) {
+    Write-Host "Existing 'context.md' found. Reading current values..." -ForegroundColor Cyan
+    $content = Get-Content $outputContextFile -Raw
+    $existingGoal = [regex]::Match($content, '(?sm)## Primary Goal\s*?\r?\n(.*?)\s*?\r?\n##').Groups[1].Value.Trim()
+    $existingModel = [regex]::Match($content, '(?sm)## AI Model\s*?\r?\n(.*?)\s*?\r?\n(##|---)').Groups[1].Value.Trim()
+}
+
+
+# 3. Get User Input
+$goalPrompt = "What is the primary goal of this project?"
+if (-not [string]::IsNullOrWhiteSpace($existingGoal)) {
+    $goalPrompt += " (Press Enter to keep: '$existingGoal')"
+}
+$userInputGoal = Read-Host -Prompt $goalPrompt
+$projectGoal = if ([string]::IsNullOrWhiteSpace($userInputGoal)) { $existingGoal } else { $userInputGoal }
+
+$modelPrompt = "Which AI model do you plan to use?"
+if (-not [string]::IsNullOrWhiteSpace($existingModel)) {
+    $modelPrompt += " (Press Enter to keep: '$existingModel')"
+}
+$userInputModel = Read-Host -Prompt $modelPrompt
+$aiModel = if ([string]::IsNullOrWhiteSpace($userInputModel)) { $existingModel } else { $userInputModel }
+
+$references = Read-Host -Prompt "[Optional] Any new reference URLs or documents to add? (comma-separated)"
 
 if ([string]::IsNullOrWhiteSpace($projectGoal) -or [string]::IsNullOrWhiteSpace($aiModel)) {
     Write-Host "Project goal and AI model cannot be empty. Aborting." -ForegroundColor Red
     exit 1
 }
 
-# 3. Define Paths
+# 4. Define Paths
 $generalContextPath = Join-Path $centralRepoPath "context_general.md"
-$outputContextFile = "context.md"
+
 
 if (-not (Test-Path $generalContextPath)) {
     Write-Host "Could not find 'context_general.md' in '$centralRepoPath'. Please run the installation script again." -ForegroundColor Red
     exit 1
 }
 
-# 4. Generate the Project-Specific Context File
-$generalContextContent = Get-Content $generalContextPath -Raw
+# 5. Generate the Project-Specific Context File
+$baseContextContent = Get-Content $generalContextPath -Raw
 
 $referencesSection = ""
+# Try to preserve existing references if any
+$existingReferences = [regex]::Match($content, '(?sm)## References\s*?\r?\n(.*?)\s*?\r?\n---').Groups[1].Value.Trim()
+
 if (-not [string]::IsNullOrWhiteSpace($references)) {
-    $referenceItems = $references.Split(',') | ForEach-Object { "- " + $_.Trim() }
+    # Add new references
+    $newReferenceItems = $references.Split(',') | ForEach-Object { "- " + $_.Trim() }
+    $existingReferences += "`r`n" + ($newReferenceItems -join "`r`n")
+}
+
+if (-not [string]::IsNullOrWhiteSpace($existingReferences)) {
     $referencesSection = @"
 
 ## References
-$($referenceItems -join "`r`n")
+$($existingReferences.Trim())
 "@
 }
 
@@ -58,13 +91,13 @@ $aiModel$($referencesSection)
 
 "@
 
-$finalContent = $projectContextHeader + $generalContextContent
+$finalContent = $projectContextHeader + $baseContextContent
 
 Set-Content -Path $outputContextFile -Value $finalContent
 
-Write-Host "Successfully created '$outputContextFile' for your new project." -ForegroundColor Green
+Write-Host "Successfully created or updated '$outputContextFile' for your new project." -ForegroundColor Green
 
-# 5. Post-Initialization Guidance
+# 6. Post-Initialization Guidance
 $guidance = @"
 
 ----------------------------------------------------
