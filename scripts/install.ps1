@@ -115,7 +115,11 @@ if (-not (Test-Path $shimDir)) {
     New-Item -Path $shimDir -ItemType Directory -Force | Out-Null
 }
 
-$shimCmd = "@echo off`r`n" + "powershell -NoProfile -ExecutionPolicy Bypass -File \"%USERPROFILE%\\.cursor_configs\\scripts\\init_project.ps1\"`r`n" + "exit /b %ERRORLEVEL%`r`n"
+$shimCmd = @'
+@echo off
+powershell -NoProfile -ExecutionPolicy Bypass -File "%USERPROFILE%\.cursor_configs\scripts\init_project.ps1" %*
+exit /b %ERRORLEVEL%
+'@
 Set-Content -Path $shimCmdPath -Value $shimCmd -Encoding ASCII
 
 # Ensure shimDir is on PATH (User) and current session
