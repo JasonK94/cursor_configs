@@ -21,8 +21,9 @@ $outputContextFile = "context.md"
 if (Test-Path $outputContextFile) {
     Write-Host "Existing 'context.md' found. Reading current values..." -ForegroundColor Cyan
     $content = Get-Content $outputContextFile -Raw
-    $existingGoal = [regex]::Match($content, '(?sm)## Primary Goal\s*?\r?\n(.*?)\s*?\r?\n##').Groups[1].Value.Trim()
-    $existingModel = [regex]::Match($content, '(?sm)## AI Model\s*?\r?\n(.*?)\s*?\r?\n(##|---)').Groups[1].Value.Trim()
+    # More robust regex to find content between a heading and the next heading or horizontal rule
+    $existingGoal = [regex]::Match($content, '(?sm)## Primary Goal\s*?\r?\n(.*?)\s*?\r?\n(##\s|---)').Groups[1].Value.Trim()
+    $existingModel = [regex]::Match($content, '(?sm)## AI Model\s*?\r?\n(.*?)\s*?\r?\n(##\s|---)').Groups[1].Value.Trim()
 }
 
 
@@ -114,6 +115,11 @@ Copy the following instructions and paste them into the Cursor chat to begin the
 ---
 "@
 Set-Content -Path $nextStepsFile -Value $nextStepsContent
+
+# Add a verification step to ensure the file was created
+if (-not (Test-Path $nextStepsFile)) {
+    Write-Host "Error: Failed to create '$nextStepsFile'. Please check permissions." -ForegroundColor Red
+}
 
 # 7. Post-Initialization Guidance
 $guidance = @"
