@@ -2,9 +2,10 @@ param(
     [string]$WorkingDirectory
 )
 
-# Set the working directory to where cinit was called from
-if (-not [string]::IsNullOrWhiteSpace($WorkingDirectory) -and (Test-Path $WorkingDirectory)) {
-    Set-Location -Path $WorkingDirectory
+# CRITICAL: Abort if the calling directory was not passed correctly.
+if ([string]::IsNullOrWhiteSpace($WorkingDirectory) -or -not (Test-Path $WorkingDirectory)) {
+    Write-Host "FATAL: Script was called without a valid working directory. Please ensure you are using the latest version by running install.ps1" -ForegroundColor Red
+    exit 1
 }
 
 # init_project.ps1 - Interactively initializes a new project with cursor context.
@@ -25,7 +26,8 @@ try {
 # 2. Check for existing context and extract values
 $existingGoal = ""
 $existingModel = ""
-$outputContextFile = "context.md"
+# Use ABSOLUTE paths for all file operations
+$outputContextFile = Join-Path $WorkingDirectory "context.md"
 
 if (Test-Path $outputContextFile) {
     Write-Host "Existing 'context.md' found. Reading current values..." -ForegroundColor Cyan
@@ -108,7 +110,7 @@ Set-Content -Path $outputContextFile -Value $finalContent
 Write-Host "Successfully created or updated '$outputContextFile' for your new project." -ForegroundColor Green
 
 # 6. Create NEXT_STEPS.md
-$nextStepsFile = "NEXT_STEPS.md"
+$nextStepsFile = Join-Path $WorkingDirectory "NEXT_STEPS.md"
 $nextStepsContent = @"
 # Next Steps: Your First Prompt for the AI Agent
 
