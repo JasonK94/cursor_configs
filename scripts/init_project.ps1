@@ -61,7 +61,7 @@ if ([string]::IsNullOrWhiteSpace($projectGoal) -or [string]::IsNullOrWhiteSpace(
 }
 
 # 4. Define Paths
-$generalContextPath = Join-Path $centralRepoPath "context_general.md"
+$generalContextPath = Join-Path $centralRepoPath "templates/context.md.template"
 
 
 if (-not (Test-Path $generalContextPath)) {

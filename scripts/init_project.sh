@@ -93,9 +93,9 @@ if [ -z "$PROJECT_GOAL" ] || [ -z "$AI_MODEL" ]; then
 fi
 
 # 4. Generate the Project-Specific Context File
-GENERAL_CONTEXT_PATH="$CENTRAL_REPO_PATH/context_general.md"
+GENERAL_CONTEXT_PATH="$CENTRAL_REPO_PATH/templates/context.md.template"
 if [ ! -f "$GENERAL_CONTEXT_PATH" ]; then
-    print_error "Could not find 'context_general.md' in '$CENTRAL_REPO_PATH'. Please run the installation script again."
+    print_error "Could not find 'templates/context.md.template' in '$CENTRAL_REPO_PATH'. Please run the installation script again."
     exit 1
 fi
 BASE_CONTEXT_CONTENT=$(cat "$GENERAL_CONTEXT_PATH")
