@@ -18,6 +18,9 @@ try {
     if ($LASTEXITCODE -eq 0) {
         if ($output -like "*Already up to date.*") {
             Write-Host "cursor_configs is already up to date." -ForegroundColor Green
+            # Get and display the date of the last commit
+            $lastCommitDate = git log -1 --format="%cd" --date=iso
+            Write-Host "Last updated on: $lastCommitDate"
         }
         else {
             Write-Host "cursor_configs has been successfully updated." -ForegroundColor Green

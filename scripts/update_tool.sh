@@ -30,8 +30,18 @@ fi
 print_info "Checking for updates in '$CENTRAL_REPO_PATH'..."
 cd "$CENTRAL_REPO_PATH"
 
-if git pull; then
-    print_success "Update check complete."
+output=$(git pull)
+exit_code=$?
+
+if [ $exit_code -eq 0 ]; then
+    if [[ "$output" == "Already up to date." ]]; then
+        print_success "cursor_configs is already up to date."
+        last_commit_date=$(git log -1 --format="%cd" --date=iso)
+        print_info "Last updated on: $last_commit_date"
+    else
+        print_success "cursor_configs has been successfully updated."
+        echo "$output"
+    fi
 else
     print_error "An error occurred during the update process."
     exit 1
