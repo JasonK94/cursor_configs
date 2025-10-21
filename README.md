@@ -43,6 +43,21 @@ graph TD
     H --> I
 ```
 
+## Prerequisites and Recommendations
+
+### Core Requirements
+
+-   **[Git](https://git-scm.com/)**: Required for cloning the repository and for the project initialization workflow.
+-   **[Cursor](https://cursor.sh/)**: This entire workflow is designed to be used within the Cursor AI editor.
+-   **A compatible shell**:
+    -   **Windows**: PowerShell 5.1 or newer.
+    -   **Linux / macOS**: A standard shell like `bash` or `zsh`.
+
+### Recommended Tools
+
+-   **[GitHub CLI (`gh`)](https://cli.github.com/)**: For seamless interaction with GitHub repositories from the command line.
+-   **Mermaid Diagram Viewer**: To preview the workflow diagram in `README.md` directly within the editor. A popular choice is the **[Markdown Preview Mermaid Support](https://marketplace.visualstudio.com/items?itemName=bierner.markdown-mermaid)** extension available in the Visual Studio Code Marketplace (which is compatible with Cursor).
+
 ## Getting Started
 
 This tool supports both Windows and Linux/macOS. Please follow the instructions for your operating system.
