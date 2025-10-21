@@ -28,4 +28,6 @@ This project adheres to the following conventions. All AI assistants must follow
 
 3.  **Keep a Changelog**: The `CHANGELOG.md` file must be kept in the format defined by [Keep a Changelog](https://keepachangelog.com/).
 
+4.  **PowerShell Command Chaining**: Do not chain commands using `&&` in `run_terminal_cmd` when the shell is PowerShell. Execute commands one by one to avoid parsing errors. This is a critical environmental constraint.
+
 This is the Single Source of Truth for any AI assistant working on the `cursor_configs` repository itself. The base template for this file's structure can be found in `templates/context.md.template`.
