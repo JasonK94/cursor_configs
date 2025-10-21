@@ -11,6 +11,38 @@ This repository stores and manages the configuration and context files for worki
 
 This project is "meta" in that it defines the process for how we define processes. The key idea is that our methods for collaboration should continuously improve. The workflows and context files in this repository are not static; they are expected to be updated as we discover better ways of working together.
 
+### Visual Workflow
+
+The following diagram illustrates the end-to-end workflow, from initializing a new project to starting development with the AI.
+
+```mermaid
+graph TD
+    subgraph "User's Machine"
+        A[1. User creates a new folder and runs 'cinit']
+    end
+
+    subgraph "cinit Script Logic"
+        B{2. cinit runs}
+        B --> C[Fetches latest templates<br/>from GitHub]
+        B --> D[Prompts user for<br/>Goal, AI Model, etc.]
+        D --> E[Generates initial project files<br/>- context.md<br/>- NEXT_STEPS.md<br/>- DEVLOG.md<br/>- CHANGELOG.md]
+    end
+
+    subgraph "Cursor AI Chat"
+        F[3. User copies prompt<br/>from NEXT_STEPS.md]
+        F --> G[Pastes into Cursor Chat]
+        G --> H{4. AI Agent reads context.md<br/>and proposes a plan}
+    end
+
+    subgraph "Development Cycle"
+        I[5. User and AI collaborate<br/>to execute the plan]
+    end
+
+    A --> B
+    E --> F
+    H --> I
+```
+
 ## Getting Started
 
 This tool supports both Windows and Linux/macOS. Please follow the instructions for your operating system.

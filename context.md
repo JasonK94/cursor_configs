@@ -30,4 +30,6 @@ This project adheres to the following conventions. All AI assistants must follow
 
 4.  **PowerShell Command Chaining**: Do not chain commands using `&&` in `run_terminal_cmd` when the shell is PowerShell. Execute commands one by one to avoid parsing errors. This is a critical environmental constraint.
 
+5.  **Conversation Context Management**: At the end of a significant task or decision-making process, summarize the key points of the conversation and record them in `DEVLOG.md`. This ensures that important context is not lost when the conversation window is cleared.
+
 This is the Single Source of Truth for any AI assistant working on the `cursor_configs` repository itself. The base template for this file's structure can be found in `templates/context.md.template`.
