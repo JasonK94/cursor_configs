@@ -149,6 +149,13 @@ if ($env:Path -notlike "*${shimDir}*") {
     }
 }
 
+# Create the cupdate shim
+$updateScriptPath = Join-Path $centralRepoPath "scripts\update_tool.ps1"
+$updateShimPath = Join-Path $shimDir "cupdate.cmd"
+$updateShimContent = "@echo off`r`npwsh -NoProfile -ExecutionPolicy Bypass -File `"$updateScriptPath`" %*"
+Set-Content -Path $updateShimPath -Value $updateShimContent -Force
+Write-Host "Successfully created 'cupdate' command." -ForegroundColor Green
+
 if ($changesMade) {
     Write-Host "'$commandName' (alias '$finalAlias') has been configured. Restart your terminal or run '. `"$($PROFILE.CurrentUserAllHosts)`"' to use it." -ForegroundColor Green
 } else {

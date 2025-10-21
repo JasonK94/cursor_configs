@@ -60,7 +60,19 @@ EOF
 chmod +x "$SHIM_PATH"
 print_success "cinit command created at $SHIM_PATH"
 
-# 5. Ensure Shim Directory is on PATH
+# 5. Create the 'cupdate' shim executable
+UPDATE_SCRIPT_PATH="$CENTRAL_REPO_PATH/scripts/update_tool.sh"
+UPDATE_SHIM_PATH="$SHIM_DIR/cupdate"
+cat > "$UPDATE_SHIM_PATH" << EOF
+#!/bin/bash
+# This shim executes the main cupdate logic.
+exec bash "$UPDATE_SCRIPT_PATH" "\$@"
+EOF
+
+chmod +x "$UPDATE_SHIM_PATH"
+print_success "cupdate command created at $UPDATE_SHIM_PATH"
+
+# 6. Ensure Shim Directory is on PATH
 # Detect shell profile
 if [ -n "\$BASH_VERSION" ]; then
     PROFILE_FILE="$HOME/.bashrc"

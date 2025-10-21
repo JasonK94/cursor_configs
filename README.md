@@ -128,6 +128,16 @@ After `cinit` successfully creates your `context.md`, follow these steps:
     > "Read the `context.md` file, understand the goal, and propose a step-by-step plan to achieve it."
 3.  **Iterate**: Use the AI to execute the plan, one step at a time. Update `context.md` as the project evolves to reflect new decisions or changes in scope.
 
+### Updating the Tool
+
+To get the latest updates for the `cinit` tool itself (including new features, templates, and bug fixes), you can run the `cupdate` command from anywhere in your terminal.
+
+```sh
+cupdate
+```
+
+This will pull the latest changes from the official repository into your local `~/.cursor_configs` directory.
+
 ## Further Reading
 
 -   **[Documentation Structure](./docs/project_structure.md)**: Understand the difference between the "model" documents in this repository and the "project" documents you'll be creating.
