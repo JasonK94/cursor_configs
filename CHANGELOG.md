@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- **Error-Learning Mechanism**: The `context.md.template` now includes a "Project-Specific Caveats (Learned Lessons)" section, allowing AI agents to document and learn from past mistakes, preventing repeat errors.
 
 ## [0.2.0] - 2025-10-20
 ### Added

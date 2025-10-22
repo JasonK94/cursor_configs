@@ -57,3 +57,13 @@ Template entry:
 - **Result**: **SUCCESS**. The end-to-end test on `s1` completed successfully. `ls -l` confirmed that all four context files were created correctly in the target directory. The Linux workflow is now considered stable and verified.
 
 ---
+
+2025-10-22 - AI Agent
+- **Summary**: Enhanced `context.md.template` to include a mechanism for learning from past mistakes.
+- **Details**:
+  - Added a "🪲 Project-Specific Caveats (Learned Lessons)" section to `templates/context.md.template`. This section will serve as a living document to record project-specific rules and prevent repeated errors.
+  - Updated the "Evolving This Context File" section to formalize the process of documenting failures in the new "Caveats" section.
+- **Risks/Notes**: None. This change improves the robustness of the project initialization template.
+- **Next Steps**: Update `CHANGELOG.md` and commit the changes.
+
+---
