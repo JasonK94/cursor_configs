@@ -1,5 +1,7 @@
 # PowerShell Caveats & FAQ
 
+> Korean translation: `docs/ko/powershell_caveats.md`
+
 This document addresses common issues and questions regarding the PowerShell environment, particularly the differences between terminals and how our scripts handle them.
 
 ### 1. Why does PowerShell behave differently in Cursor (VS Code) vs. the System Terminal?
@@ -63,7 +65,7 @@ This is normal behavior on modern Windows systems (10/11). By default, Windows o
 
 The `cinit` command itself does not run the installer. The update mechanism works in two ways:
 1.  **Manual Update**: When you manually run `.\scripts\install.ps1`, the script updates the central repository (`~/.cursor_configs`) via `git pull`. This is for updating the installer logic itself.
-2.  **Automatic Update**: When you run `cinit`, the `init_project.ps1` script's first action is to run `git pull` from within the central repository. This ensures that every time you start a new project, you are using the latest version of the core logic, regardless of which PowerShell you run it from.
+2.  **Automatic Update**: When you run `cinit`, the `init_project.ps1` script's first action is to run `git pull` from within the central repository. This ensures that every time you start a new project, you are using the latest version of the core logic, regardless of which PowerShell you run it from. You can also run `cupdate` at any time to refresh without kicking off a project initialization.
 
 ---
 

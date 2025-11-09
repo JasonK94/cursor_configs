@@ -1,0 +1,35 @@
+# Project Context for `{{PROJECT_NAME}}`
+
+## Purpose
+
+Summarize the mission, target users, and success criteria for this project. Keep it high-level and actionable.
+
+## Working Agreement
+
+- **Primary Owner**: …
+- **Collaborating Agents**: …
+- **Branches**: Base on `proj/{{PROJECT_SLUG}}`; short-lived work uses `chore/{{PROJECT_SLUG}}/<agent>/<topic>`.
+- **Dependencies**: List external services, repos, or data sources.
+
+## Current Status
+
+- **Milestone**: …
+- **In-Progress Tasks**: …
+- **Blocked Items**: …
+
+## Constraints & Decision Log
+
+- Architecture choices, tech stack decisions, and non-negotiable constraints.
+- Link to `DEVLOG.md` entries or ADRs for full details.
+
+## Hand-off Notes
+
+- Recent changes worth highlighting.
+- Pending reviews, test coverage gaps, or verification steps.
+
+## Resources
+
+- Link to specs, design docs, API references, or runbooks.
+
+Keep this document concise. Update after every major change or hand-off, and reflect the update in `DEVLOG.md`.
+

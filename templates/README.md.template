@@ -1,0 +1,52 @@
+# {{PROJECT_NAME}}
+
+> Replace `{{PROJECT_NAME}}` with the working title before sharing this README.
+
+## Overview
+
+- **Goal**: Describe the business or product outcome in two sentences.
+- **Scope**: Bullet the main features or deliverables in scope.
+- **Out of Scope**: Optional list of explicit exclusions to avoid confusion.
+
+## Context Feed Checklist
+
+When launching a fresh Cursor session (human or agent), supply context in this order:
+
+1. Root `context.md`
+2. `docs/context/meta_agent.md`
+3. Project-specific context (`projects/{{PROJECT_SLUG}}/context.md` or equivalent)
+4. Latest relevant excerpts from `DEVLOG.md` / `CHANGELOG.md`
+5. Task brief(s) under `tasks/<task_id>/`
+
+Add additional docs (designs, API specs) as needed, but keep the order intact.
+
+## Collaboration Rules (Human & AI)
+
+- Follow `context.md` conventions: Conventional Commits, semantic versioning, and DEVLOG updates.
+- Record every major decision in `DEVLOG.md` with a timestamped entry.
+- Use feature branches: `proj/{{PROJECT_SLUG}}` for mainline work, `chore/{{PROJECT_SLUG}}/<agent>/<topic>` for experiments.
+- Link TODOs or tickets in commit messages when possible.
+
+## Getting Started
+
+1. Ensure prerequisites (languages, runtimes, tooling) are documented here.
+2. Run setup scripts or manual steps (list commands).
+3. Verify the environment with smoke tests or lint commands.
+
+For a step-by-step Cursor workflow (quick start + detailed manual), see `docs/cursor_workflow.md`.
+
+## Key Files & Directories
+
+- `context.md` — global repository rules
+- `projects/{{PROJECT_SLUG}}/context.md` — project-specific constraints
+- `tasks/` — briefs, status updates, hand-off notes
+- `docs/` — architecture decisions, API references, supplementary guides
+
+## Status & Next Steps
+
+- **Current Milestone**: …
+- **Upcoming Work**: …
+- **Open Questions / Risks**: …
+
+Keep this section synchronized with the project context file and task tracker.
+

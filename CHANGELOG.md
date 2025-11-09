@@ -7,7 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- **Error-Learning Mechanism**: The `context.md.template` now includes a "Project-Specific Caveats (Learned Lessons)" section, allowing AI agents to document and learn from past mistakes, preventing repeat errors.
+- **Error-Learning Mechanism**: The `cursor_configs_context.md.template` (formerly `context.md.template`) now includes a "Project-Specific Caveats (Learned Lessons)" section so agents can document and learn from past mistakes.
+- **Bilingual Documentation Support**: Added Korean translations for core docs/templates and updated `cinit` to let users choose English, Korean, or both when generating project scaffolds.
+
+### Changed
+- Renamed `templates/context.md.template` to `templates/cursor_configs_context.md.template` (and matching Korean variant) to clarify that the file represents the repository’s meta-context template.
 
 ## [0.2.0] - 2025-10-20
 ### Added

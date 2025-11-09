@@ -32,4 +32,39 @@ This project adheres to the following conventions. All AI assistants must follow
 
 5.  **Conversation Context Management**: At the end of a significant task or decision-making process, summarize the key points of the conversation and record them in `DEVLOG.md`. This ensures that important context is not lost when the conversation window is cleared.
 
-This is the Single Source of Truth for any AI assistant working on the `cursor_configs` repository itself. The base template for this file's structure can be found in `templates/context.md.template`.
+This is the Single Source of Truth for any AI assistant working on the `cursor_configs` repository itself. The base template for this file's structure can be found in `templates/cursor_configs_context.md.template`.
+
+---
+
+## Context Hierarchy & Roles
+
+Multiple agents may collaborate on this repository. To keep contexts portable (drag-and-drop friendly) while avoiding duplication, adhere to this layered model:
+
+1. **Meta Agent Context** — `docs/context/meta_agent.md`
+    - Describes how the meta agent coordinates projects, assigns tasks, and curates shared knowledge (e.g., `context.md`, `DEVLOG.md`, `CHANGELOG.md`).
+    - Must be reviewed before assigning or reassigning work to other agents.
+2. **Project Contexts** — `projects/<project_name>/context.md` (or another path documented in `docs/project_structure.md`)
+    - Each active sub-project maintains its own context file, summarizing goals, constraints, dependencies, and current status.
+    - When branching, prefer `proj/<project_name>` as the base branch name; agent-specific experiments should nest under it (`chore/<project>/<agent>/<topic>`).
+3. **Agent-Specific Notes (Optional)** — `docs/context/agent_<handle>.md`
+    - Captures working style, shortcuts, or personal TODOs for a given agent.
+    - Reference from project contexts only when those notes affect execution.
+
+**Feeding order when spinning up a new agent**
+
+1. `context.md` (this file)
+2. `docs/context/meta_agent.md`
+3. Relevant project context(s)
+4. Latest entries in `DEVLOG.md` and `CHANGELOG.md`
+5. Any task briefs under `tasks/<task_id>/`
+
+Keep each file scoped to its layer—avoid repeating the same instruction across layers. When a layer changes, update higher layers with a link rather than duplicating content.
+If a collaborator prefers Korean materials, provide the paired files (for example `context_Korean.md`, `README_Korean.md`, `DEVLOG_Korean.md`) alongside their English counterparts.
+
+---
+
+## Logging & Hand-off Protocol
+
+- Significant decisions, blocked states, and hand-offs must be recorded in `DEVLOG.md` with cross-links to project contexts or task briefs.
+- For live collaboration, capture questions and resolutions in `discussions/<topic>.md`, then summarize the outcome in the relevant context file.
+- Before finishing a task, update the associated project context to reflect the new state and list any open follow-ups.

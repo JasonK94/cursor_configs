@@ -2,10 +2,13 @@
 
 This repository stores and manages the configuration and context files for working with the Cursor AI assistant. The goal is to create a standardized, efficient, and evolving framework for initiating and executing software projects with an AI pair programmer.
 
+> 한국어 버전은 `README_KO.md`에서 확인할 수 있습니다.
+
 ## Core Components
 
-1.  **`context_general.md`**: A general context file that outlines the foundational principles, communication styles, and workflows for any project. This serves as the base template.
-2.  **Project-Specific Contexts**: (Future) A collection of specialized context files for different types of projects (e.g., `python_api_context.md`, `react_frontend_context.md`).
+1.  **Model Documents (this repo)**: Reference guides and conventions such as `context.md`, `docs/`, and meta-agent workflows that explain how to run Cursor-led projects.
+2.  **Templates (`templates/` directory)**: Files copied into every new project by `cinit` (e.g., `cursor_configs_context.md.template`, `DEVLOG.md.template`, English/Korean README templates, project context template).
+3.  **Automation Scripts (`scripts/`)**: Installation and maintenance tooling (`install`, `init_project`, `update_tool`) that provide the `cinit` and `cupdate` commands.
 
 ## The Meta-Workflow
 
@@ -117,31 +120,32 @@ Once the one-time setup is complete, you can initialize any new project with a s
     ```sh
     cinit
     ```
-4.  Follow the interactive prompts. The script will automatically create `context.md`, `NEXT_STEPS.md`, `DEVLOG.md`, and `CHANGELOG.md` for you, and you can begin your project.
+4.  Follow the interactive prompts. Choose your preferred documentation language (English, Korean, or both) when prompted. The script will automatically create `context.md`, `NEXT_STEPS.md`, log templates, and the matching README(s) for you, and you can begin your project.
 
 ### Recommended Workflow After `cinit`
 
-After `cinit` successfully creates your `context.md`, follow these steps:
+After `cinit` successfully creates your project scaffold, follow these steps:
 
 1.  **Enrich the Context**: Open the new `context.md`. Add more specific details, requirements, or constraints to the "Primary Goal" section. If you have them, add more links or file paths to the "References" section. A rich context leads to better results.
 2.  **Start the Conversation**: Begin your session with the AI assistant. A good starting prompt is:
     > "Read the `context.md` file, understand the goal, and propose a step-by-step plan to achieve it."
-3.  **Iterate**: Use the AI to execute the plan, one step at a time. Update `context.md` as the project evolves to reflect new decisions or changes in scope.
+3.  **Iterate**: Use the AI to execute the plan, one step at a time. Update `context.md` (and `project_context.md` if present) as the project evolves to reflect new decisions or changes in scope.
 
 ### Updating the Tool
 
-To get the latest updates for the `cinit` tool itself (including new features, templates, and bug fixes), you can run the `cupdate` command from anywhere in your terminal.
+Run `cupdate` any time you want to pull the latest scripts, templates, or documentation:
 
 ```sh
 cupdate
 ```
 
-This will pull the latest changes from the official repository into your local `~/.cursor_configs` directory.
+The command fetches updates into `~/.cursor_configs` and keeps your local `cinit` workflow current. Re-run `cinit` in existing projects to regenerate individual files if you need newer templates.
 
 ## Further Reading
 
 -   **[Documentation Structure](./docs/project_structure.md)**: Understand the difference between the "model" documents in this repository and the "project" documents you'll be creating.
 -   **[PowerShell Caveats & FAQ](./docs/powershell_caveats.md)**: Answers to common questions about the PowerShell environment and why the installer is designed the way it is.
+-   **[Cursor Collaboration Workflow](./docs/cursor_workflow.md)**: Quick start and detailed manual for launching Cursor sessions (Korean version available under `docs/ko/`).
 
 ## Development History
 

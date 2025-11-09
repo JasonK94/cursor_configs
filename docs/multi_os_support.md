@@ -1,5 +1,7 @@
 # Multi-OS Support Design
 
+> Korean translation: `docs/ko/multi_os_support.md`
+
 This document explains the design choices behind making the `cinit` workflow compatible with both Windows and Unix-like systems (Linux, macOS).
 
 ## Core Principle: Parallel Implementations

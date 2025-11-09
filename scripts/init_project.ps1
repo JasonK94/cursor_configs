@@ -26,6 +26,7 @@ try {
 # 2. Check for existing context and extract values
 $existingGoal = ""
 $existingModel = ""
+$existingReferences = ""
 # Use ABSOLUTE paths for all file operations
 $outputContextFile = Join-Path $ProjectRoot "context.md"
 
@@ -33,8 +34,9 @@ if (Test-Path $outputContextFile) {
     Write-Host "Existing 'context.md' found. Reading current values..." -ForegroundColor Cyan
     $content = Get-Content $outputContextFile -Raw
     # More robust regex to find content between a heading and the next heading or horizontal rule
-    $existingGoal = [regex]::Match($content, '(?sm)## Primary Goal\s*?\r?\n(.*?)\s*?\r?\n(##\s|---)').Groups[1].Value.Trim()
-    $existingModel = [regex]::Match($content, '(?sm)## AI Model\s*?\r?\n(.*?)\s*?\r?\n(##\s|---)').Groups[1].Value.Trim()
+    $existingGoal = [regex]::Match($content, '(?sm)## (Primary Goal|주요 목표)\s*?\r?\n(.*?)\s*?\r?\n(##\s|---)').Groups[2].Value.Trim()
+    $existingModel = [regex]::Match($content, '(?sm)## (AI Model|사용 예정 AI 모델)\s*?\r?\n(.*?)\s*?\r?\n(##\s|---)').Groups[2].Value.Trim()
+    $existingReferences = [regex]::Match($content, '(?sm)## (References|참고 자료)\s*?\r?\n(.*?)\s*?\r?\n(##\s|---)').Groups[2].Value.Trim()
 }
 
 
@@ -55,62 +57,125 @@ $aiModel = if ([string]::IsNullOrWhiteSpace($userInputModel)) { $existingModel }
 
 $references = Read-Host -Prompt "[Optional] Any new reference URLs or documents to add? (comma-separated)"
 
+$languagePrompt = @"
+Select documentation language:
+[1] Both (default)
+[2] English only
+[3] Korean only
+"@
+$languageChoice = Read-Host -Prompt $languagePrompt
+switch ($languageChoice) {
+    "2" {
+        $includeEnglish = $true
+        $includeKorean = $false
+    }
+    "3" {
+        $includeEnglish = $false
+        $includeKorean = $true
+    }
+    default {
+        $includeEnglish = $true
+        $includeKorean = $true
+    }
+}
+
 if ([string]::IsNullOrWhiteSpace($projectGoal) -or [string]::IsNullOrWhiteSpace($aiModel)) {
     Write-Host "Project goal and AI model cannot be empty. Aborting." -ForegroundColor Red
     exit 1
 }
 
 # 4. Define Paths
-$generalContextPath = Join-Path $centralRepoPath "templates/context.md.template"
+$generalContextPathEn = Join-Path $centralRepoPath "templates/cursor_configs_context.md.template"
+$generalContextPathKo = Join-Path $centralRepoPath "templates/cursor_configs_context_Korean.md.template"
 
-
-if (-not (Test-Path $generalContextPath)) {
-    Write-Host "Could not find 'context_general.md' in '$centralRepoPath'. Please run the installation script again." -ForegroundColor Red
+if ($includeEnglish -and -not (Test-Path $generalContextPathEn)) {
+    Write-Host "Could not find 'templates/cursor_configs_context.md.template' in '$centralRepoPath'. Please run the installation script again." -ForegroundColor Red
+    exit 1
+}
+if ($includeKorean -and -not (Test-Path $generalContextPathKo)) {
+    Write-Host "Could not find 'templates/cursor_configs_context_Korean.md.template' in '$centralRepoPath'. Please run the installation script again." -ForegroundColor Red
     exit 1
 }
 
-# 5. Generate the Project-Specific Context File
-$baseContextContent = Get-Content $generalContextPath -Raw
-
-$referencesSection = ""
-# Try to preserve existing references if any
-$existingReferences = [regex]::Match($content, '(?sm)## References\s*?\r?\n(.*?)\s*?\r?\n---').Groups[1].Value.Trim()
-
+# 5. Generate the Project-Specific Context File(s)
 if (-not [string]::IsNullOrWhiteSpace($references)) {
-    # Add new references
     $newReferenceItems = $references.Split(',') | ForEach-Object { "- " + $_.Trim() }
-    $existingReferences += "`r`n" + ($newReferenceItems -join "`r`n")
+    if (-not [string]::IsNullOrWhiteSpace($existingReferences)) {
+        $existingReferences += "`r`n"
+    }
+    $existingReferences += ($newReferenceItems -join "`r`n")
 }
+$existingReferences = $existingReferences.Trim()
 
-if (-not [string]::IsNullOrWhiteSpace($existingReferences)) {
-    $referencesSection = @"
+if ($includeEnglish) {
+    $baseContextContentEn = Get-Content $generalContextPathEn -Raw
+    $referencesSectionEn = ""
+    if (-not [string]::IsNullOrWhiteSpace($existingReferences)) {
+        $referencesSectionEn = @"
 
 ## References
-$($existingReferences.Trim())
+$existingReferences
 "@
-}
-
-$projectContextHeader = @"
+    }
+    $projectContextHeaderEn = @"
 # Project-Specific Context
 
 ## Primary Goal
 $projectGoal
 
 ## AI Model
-$aiModel$($referencesSection)
+$aiModel$referencesSectionEn
 
 ---
 
 "@
+    $finalContentEn = $projectContextHeaderEn + $baseContextContentEn
+    Set-Content -Path $outputContextFile -Value $finalContentEn
+    Write-Host "Successfully created or updated '$outputContextFile' for your new project." -ForegroundColor Green
+}
 
-$finalContent = $projectContextHeader + $baseContextContent
+if ($includeKorean) {
+    $baseContextContentKo = Get-Content $generalContextPathKo -Raw
+    $referencesSectionKo = ""
+    if (-not [string]::IsNullOrWhiteSpace($existingReferences)) {
+        $referencesSectionKo = @"
 
-Set-Content -Path $outputContextFile -Value $finalContent
+## 참고 자료
+$existingReferences
+"@
+    }
+    $koreanContextHeader = @"
+# 프로젝트 전용 컨텍스트
 
-Write-Host "Successfully created or updated '$outputContextFile' for your new project." -ForegroundColor Green
+## 주요 목표
+$projectGoal
+
+## 사용 예정 AI 모델
+$aiModel$referencesSectionKo
+
+---
+
+"@
+    $koreanContextPath = if ($includeEnglish) { Join-Path $ProjectRoot "context_Korean.md" } else { Join-Path $ProjectRoot "context.md" }
+    Set-Content -Path $koreanContextPath -Value ($koreanContextHeader + $baseContextContentKo)
+    Write-Host "Successfully created or updated '$koreanContextPath' for your new project." -ForegroundColor Green
+}
 
 # 6. Create NEXT_STEPS.md
 $nextStepsFile = Join-Path $ProjectRoot "NEXT_STEPS.md"
+$documentationInstruction = switch ($true) {
+    { $includeEnglish -and $includeKorean } {
+        "4.  **Draft Documentation**: Based on the plan, write drafts for `README.md` (English) and `README_Korean.md` (Korean) that outline the project's purpose and planned features."
+        break
+    }
+    { $includeEnglish -and -not $includeKorean } {
+        "4.  **Draft Documentation**: Based on the plan, write a draft for `README.md` (English) that outlines the project's purpose and planned features."
+        break
+    }
+    default {
+        "4.  **Draft Documentation**: Based on the plan, write a draft for `README.md` (Korean) that outlines the project's purpose and planned features."
+    }
+}
 $nextStepsContent = @"
 # Next Steps: Your First Prompt for the AI Agent
 
@@ -121,7 +186,7 @@ Copy the following instructions and paste them into the Cursor chat to begin the
 1.  **Analyze Context**: Read the `context.md` file thoroughly to understand the project's Primary Goal, the designated AI Model, and any provided References.
 2.  **Deconstruct the Goal**: Based on your analysis, break down the Primary Goal into a logical sequence of smaller, actionable sub-goals.
 3.  **Propose a Plan**: Present a detailed, step-by-step TODO list that outlines the implementation plan for the *first* sub-goal. For each step, specify which files you intend to create or modify.
-4.  **Draft Documentation**: Based on the plan, write a draft for `README.md` (in English) and `README_Korean.md` (in Korean) that outlines the project's purpose and planned features.
+$documentationInstruction
 5.  **Confirm Before Acting**: After presenting the plan and the draft READMEs, ask for my confirmation before you begin writing any code or modifying any files.
 
 ---
@@ -135,28 +200,55 @@ if (-not (Test-Path $nextStepsFile)) {
 }
 
 # 7. Copy Log Templates
-$devlogTemplatePath = Join-Path $centralRepoPath "templates/DEVLOG.md.template"
-$changelogTemplatePath = Join-Path $centralRepoPath "templates/CHANGELOG.md.template"
+$devlogTemplatePathEn = Join-Path $centralRepoPath "templates/DEVLOG.md.template"
+$changelogTemplatePathEn = Join-Path $centralRepoPath "templates/CHANGELOG.md.template"
+$devlogTemplatePathKo = Join-Path $centralRepoPath "templates/DEVLOG_Korean.md.template"
+$changelogTemplatePathKo = Join-Path $centralRepoPath "templates/CHANGELOG_Korean.md.template"
 $devlogDestPath = Join-Path $ProjectRoot "DEVLOG.md"
 $changelogDestPath = Join-Path $ProjectRoot "CHANGELOG.md"
 
-if ((Test-Path $devlogTemplatePath) -and -not (Test-Path $devlogDestPath)) {
-    Copy-Item -Path $devlogTemplatePath -Destination $devlogDestPath
-}
-if ((Test-Path $changelogTemplatePath) -and -not (Test-Path $changelogDestPath)) {
-    Copy-Item -Path $changelogTemplatePath -Destination $changelogDestPath
+if ($includeEnglish) {
+    if ((Test-Path $devlogTemplatePathEn) -and -not (Test-Path $devlogDestPath)) {
+        Copy-Item -Path $devlogTemplatePathEn -Destination $devlogDestPath
+    }
+    if ((Test-Path $changelogTemplatePathEn) -and -not (Test-Path $changelogDestPath)) {
+        Copy-Item -Path $changelogTemplatePathEn -Destination $changelogDestPath
+    }
+} elseif ($includeKorean) {
+    if ((Test-Path $devlogTemplatePathKo) -and -not (Test-Path $devlogDestPath)) {
+        Copy-Item -Path $devlogTemplatePathKo -Destination $devlogDestPath
+    }
+    if ((Test-Path $changelogTemplatePathKo) -and -not (Test-Path $changelogDestPath)) {
+        Copy-Item -Path $changelogTemplatePathKo -Destination $changelogDestPath
+    }
 }
 
-$readmeTemplatePath = Join-Path $centralRepoPath "templates\README.md.template"
-$readmeKoreanTemplatePath = Join-Path $centralRepoPath "templates\README_Korean.md.template"
+if ($includeEnglish -and $includeKorean) {
+    $devlogDestPathKo = Join-Path $ProjectRoot "DEVLOG_Korean.md"
+    $changelogDestPathKo = Join-Path $ProjectRoot "CHANGELOG_Korean.md"
+    if ((Test-Path $devlogTemplatePathKo) -and -not (Test-Path $devlogDestPathKo)) {
+        Copy-Item -Path $devlogTemplatePathKo -Destination $devlogDestPathKo
+    }
+    if ((Test-Path $changelogTemplatePathKo) -and -not (Test-Path $changelogDestPathKo)) {
+        Copy-Item -Path $changelogTemplatePathKo -Destination $changelogDestPathKo
+    }
+}
+
+$readmeTemplatePathEn = Join-Path $centralRepoPath "templates\README.md.template"
+$readmeTemplatePathKo = Join-Path $centralRepoPath "templates\README_Korean.md.template"
 $readmeDestPath = Join-Path $ProjectRoot "README.md"
 $readmeKoreanDestPath = Join-Path $ProjectRoot "README_Korean.md"
 
-if (-not (Test-Path $readmeDestPath)) {
-    Copy-Item -Path $readmeTemplatePath -Destination $readmeDestPath
+if ($includeEnglish) {
+    if (-not (Test-Path $readmeDestPath)) {
+        Copy-Item -Path $readmeTemplatePathEn -Destination $readmeDestPath
+    }
+} elseif ($includeKorean -and -not (Test-Path $readmeDestPath)) {
+    Copy-Item -Path $readmeTemplatePathKo -Destination $readmeDestPath
 }
-if (-not (Test-Path $readmeKoreanDestPath)) {
-    Copy-Item -Path $readmeKoreanTemplatePath -Destination $readmeKoreanDestPath
+
+if ($includeEnglish -and $includeKorean -and -not (Test-Path $readmeKoreanDestPath)) {
+    Copy-Item -Path $readmeTemplatePathKo -Destination $readmeKoreanDestPath
 }
 
 # 8. Post-Initialization Guidance

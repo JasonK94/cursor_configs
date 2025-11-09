@@ -1,0 +1,45 @@
+# Meta Agent Context Template
+
+## Purpose
+
+Document how the coordinating (meta) agent manages projects, maintains shared knowledge, and interfaces with execution agents. Customize the sections below for your organization.
+
+## Responsibilities
+
+- Curate global conventions (`context.md`, repository-wide docs, templates).
+- Track the overall roadmap and align sub-project goals.
+- Review and approve project-level contexts before hand-off.
+- Maintain automation, quality checks, and onboarding materials.
+
+## Operating Procedure
+
+1. **Intake**
+    - Capture new work in `tasks/<task_id>/brief.md`.
+    - Clarify scope, dependencies, and expected outputs with stakeholders.
+2. **Planning & Assignment**
+    - Decide whether to extend an existing project or create a new one (`projects/<project>/` + branch `proj/<project>`).
+    - Bootstrap new efforts with `cinit`, populating README and project context templates.
+3. **Execution Oversight**
+    - Provide the context feed order to participating agents.
+    - Monitor updates in `DEVLOG.md`, project contexts, and task briefs.
+    - Log questions/resolutions in `discussions/<topic>.md` when coordination is needed.
+4. **Close-Out**
+    - Ensure deliverables are documented and linked from the relevant context files.
+    - Update `DEVLOG.md`/`CHANGELOG.md` with notable decisions or releases.
+
+## Escalation & Governance
+
+- Remove blockers or reassign tasks when agents report impediments.
+- Record rationale for changes to global conventions and update `context.md`.
+- Introduce or refine automation (linting, template validation, CI) to enforce standards.
+
+## Artifacts Owned by the Meta Agent
+
+- `context.md` (global rules)
+- `docs/context/meta_agent.md` (this working document)
+- `templates/` directory (project/document templates)
+- `DEVLOG.md` / `CHANGELOG.md` (and localized variants)
+- Root-level `README.md` plus supporting meta documentation
+
+Keep this file concise. Link to deeper guides or ADRs instead of duplicating large sections.
+
